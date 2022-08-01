@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import '../nav.dart';
+import '../widgets.dart';
 
 class DecodeBase64Page extends StatefulWidget {
   const DecodeBase64Page({Key? key}) : super(key: key);
@@ -35,80 +35,78 @@ class _DecodeBase64PageState extends State<DecodeBase64Page> {
     }
   }
 
+  void copyToClipboard() async {
+    await Clipboard.setData(ClipboardData(text: _outputController.text));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Decode Base64'),
-      ),
-      drawer: const NavigationDrawer(),
-      body: Container(
-        margin: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  const Text('Input'),
-                  const Spacer(),
-                  Tooltip(
-                    message: 'Paste input from clipboard',
-                    child: ElevatedButton(
-                      onPressed: pasteFromClipboard,
-                      child: const Icon(Icons.paste),
-                    ),
+    return PageScaffold(
+      title: 'Decode Base64',
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('Input'),
+                const Spacer(),
+                Tooltip(
+                  message: 'Paste input from clipboard',
+                  child: ElevatedButton(
+                    onPressed: pasteFromClipboard,
+                    child: const Icon(Icons.paste),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _inputController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter text to encode',
                 ),
-                style: const TextStyle(fontFamily: 'CascadiaMono'),
-                onChanged: updateOutput,
-              ),
+              ],
             ),
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  const Text('Output'),
-                  const Spacer(),
-                  Tooltip(
-                    message: 'Copy output to clipboard',
-                    child: ElevatedButton(
-                      onPressed: pasteFromClipboard,
-                      child: const Icon(Icons.copy),
-                    ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: _inputController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter text to encode',
+              ),
+              style: const TextStyle(fontFamily: 'CascadiaMono'),
+              onChanged: updateOutput,
+            ),
+          ),
+          const SizedBox(height: 50),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Text('Output'),
+                const Spacer(),
+                Tooltip(
+                  message: 'Copy output to clipboard',
+                  child: ElevatedButton(
+                    onPressed: copyToClipboard,
+                    child: const Icon(Icons.copy),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _outputController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Base64 encoded text',
                 ),
-                style: const TextStyle(fontFamily: 'CascadiaMono'),
-                readOnly: true,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: _outputController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Base64 encoded text',
+              ),
+              style: const TextStyle(fontFamily: 'CascadiaMono'),
+              readOnly: true,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+            ),
+          ),
+        ],
       ),
     );
   }
